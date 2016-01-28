@@ -22,7 +22,7 @@ public class DataStub {
 	private String name;
 	private Integer age;
 	private byte[] imgdata;
-	private List<Assoc> assoc;
+	private List<Assoc> assocs;
 
 	public String getId() {
 		return id;
@@ -56,12 +56,12 @@ public class DataStub {
 		this.imgdata = imgdata;
 	}
 
-	public List<Assoc> getNests() {
-		return assoc;
+	public List<Assoc> getAssocs() {
+		return assocs;
 	}
 
-	public void setNests(List<Assoc> nests) {
-		this.assoc = nests;
+	public void setAssocs(List<Assoc> assocs) {
+		this.assocs = assocs;
 	}
 
 	public static class Assoc {
