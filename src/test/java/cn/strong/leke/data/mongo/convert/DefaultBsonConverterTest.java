@@ -9,15 +9,19 @@ import java.util.Date;
 import org.bson.Document;
 import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
+import org.junit.Before;
 import org.junit.Test;
 
 import cn.strong.leke.data.mongo.convert.DataStub.Assoc;
 
 public class DefaultBsonConverterTest {
 
-	@Test
-	public void testToBSON() {
-		DataStub stub = new DataStub();
+	private DataStub stub;
+	private DefaultBsonConverter converter;
+
+	@Before
+	public void setup() {
+		stub = new DataStub();
 		stub.setId(new ObjectId().toString());
 		stub.setName("stub");
 		stub.setAge(23);
@@ -27,7 +31,11 @@ public class DefaultBsonConverterTest {
 		a1.setCreated(new Date());
 		stub.setAssocs(Arrays.asList(a1));
 
-		DefaultBsonConverter converter = new DefaultBsonConverter();
+		converter = new DefaultBsonConverter();
+	}
+
+	@Test
+	public void testToBSON() {
 		Object result = converter.toBSON(stub);
 		assertTrue("result is a Document", result instanceof Document);
 		Document doc = (Document) result;
