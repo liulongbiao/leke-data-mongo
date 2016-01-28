@@ -27,6 +27,7 @@ public class DefaultBsonConverterTest {
 		stub.setAge(23);
 		stub.setImgdata("imgdata".getBytes());
 		Assoc a1 = new Assoc();
+		a1.setAssocId(new ObjectId().toString());
 		a1.setName("assoc1");
 		a1.setCreated(new Date());
 		stub.setAssocs(Arrays.asList(a1));
