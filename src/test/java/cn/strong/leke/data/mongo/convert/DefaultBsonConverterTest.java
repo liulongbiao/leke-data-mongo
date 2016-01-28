@@ -1,7 +1,7 @@
 package cn.strong.leke.data.mongo.convert;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -44,9 +44,13 @@ public class DefaultBsonConverterTest {
 		System.out.println(json);
 	}
 
-	// @Test
+	@Test
 	public void testFromBSON() {
-		fail("Not yet implemented");
+		Document doc = (Document) converter.toBSON(stub);
+
+		DataStub result = converter.fromBSON(doc, DataStub.class);
+		assertNotNull("result should not be null", result);
+		assertTrue("imgdata should not loss", new String(result.getImgdata()).equals("imgdata"));
 	}
 
 }
