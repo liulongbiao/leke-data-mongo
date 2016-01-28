@@ -65,8 +65,18 @@ public class DataStub {
 	}
 
 	public static class Assoc {
+		@ExtObjectId
+		private String assocId;
 		private String name;
 		private Date created;
+
+		public String getAssocId() {
+			return assocId;
+		}
+
+		public void setAssocId(String assocId) {
+			this.assocId = assocId;
+		}
 
 		public String getName() {
 			return name;
@@ -85,4 +95,5 @@ public class DataStub {
 		}
 
 	}
+
 }

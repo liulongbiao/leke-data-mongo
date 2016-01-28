@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import cn.strong.leke.data.mongo.annotations.ObjectId;
 import cn.strong.leke.data.mongo.annotations._id;
+import cn.strong.leke.data.mongo.convert.DataStub.Assoc;
 
 public class BeanMetaTest {
 
@@ -27,6 +28,16 @@ public class BeanMetaTest {
 
 		BeanMeta meta2 = BeanMeta.from(List.class);
 		assertFalse(meta2.isBeanClass());
+
+		BeanMeta meta3 = BeanMeta.from(Assoc.class);
+		meta3.properties.forEach((p, td) -> {
+			System.out.println(String.format("%s : %s : %s", p.getName(), td.hasAnnotation(_id.class),
+					td.hasAnnotation(ObjectId.class)));
+			if ("assocId".equals(p.getName())) {
+				assertFalse(td.hasAnnotation(_id.class));
+				assertTrue(td.hasAnnotation(ObjectId.class));
+			}
+		});
 	}
 
 }
