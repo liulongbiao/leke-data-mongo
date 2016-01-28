@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  * @author liulongbiao
  *
  */
-@Target({ ElementType.FIELD })
+@Target({ ElementType.FIELD, ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface _id {
 
