@@ -54,7 +54,6 @@ public class BsonSimpleTypes {
 
 		SIMPLE_TYPES.add(String.class);
 		SIMPLE_TYPES.add(Date.class);
-		SIMPLE_TYPES.add(Enum.class);
 
 		SIMPLE_TYPES.add(Binary.class);
 		SIMPLE_TYPES.add(MinKey.class);
@@ -69,6 +68,8 @@ public class BsonSimpleTypes {
 		SIMPLE_TYPES.add(Pattern.class);
 		
 		SIMPLE_TYPES.add(BsonValue.class);
+
+		SIMPLE_TYPES.add(Enum.class);
 	}
 
 	public static boolean isSimpleType(Class<?> type) {
