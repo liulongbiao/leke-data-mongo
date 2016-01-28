@@ -14,7 +14,7 @@ public class BeanMetaTest {
 
 	@Test
 	public void test() {
-		BeanMeta<DataStub> meta1 = BeanMeta.from(DataStub.class);
+		BeanMeta meta1 = BeanMeta.from(DataStub.class);
 		meta1.properties.forEach((p, td) -> {
 			System.out.println(String.format("%s : %s : %s", p.getName(),
 					td.hasAnnotation(_id.class), td.hasAnnotation(ObjectId.class)));
@@ -25,7 +25,7 @@ public class BeanMetaTest {
 		});
 		assertTrue(meta1.isBeanClass());
 
-		BeanMeta<List> meta2 = BeanMeta.from(List.class);
+		BeanMeta meta2 = BeanMeta.from(List.class);
 		assertFalse(meta2.isBeanClass());
 	}
 

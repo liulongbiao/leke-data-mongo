@@ -27,20 +27,20 @@ import org.springframework.util.Assert;
  *
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class BeanMeta<S> {
+public class BeanMeta {
 
-	public static final BeanMeta<Collection> COLLECTION = new BeanMeta(Collection.class);
-	public static final BeanMeta<List> LIST = new BeanMeta(List.class);
-	public static final BeanMeta<Set> SET = new BeanMeta(Set.class);
-	public static final BeanMeta<Map> MAP = new BeanMeta(Map.class);
-	public static final BeanMeta<Object> OBJECT = new BeanMeta(Object.class);
+	public static final BeanMeta COLLECTION = new BeanMeta(Collection.class);
+	public static final BeanMeta LIST = new BeanMeta(List.class);
+	public static final BeanMeta SET = new BeanMeta(Set.class);
+	public static final BeanMeta MAP = new BeanMeta(Map.class);
+	public static final BeanMeta OBJECT = new BeanMeta(Object.class);
 
-	private static final Map<Class<?>, Reference<BeanMeta<?>>> CACHE = Collections
-			.synchronizedMap(new WeakHashMap<Class<?>, Reference<BeanMeta<?>>>());
+	private static final Map<Class, Reference<BeanMeta>> CACHE = Collections
+			.synchronizedMap(new WeakHashMap<Class, Reference<BeanMeta>>());
 
 	static {
-		for (BeanMeta<?> info : Arrays.asList(COLLECTION, LIST, SET, MAP, OBJECT)) {
-			CACHE.put(info.type, new WeakReference<BeanMeta<?>>(info));
+		for (BeanMeta info : Arrays.asList(COLLECTION, LIST, SET, MAP, OBJECT)) {
+			CACHE.put(info.type, new WeakReference<BeanMeta>(info));
 		}
 	}
 
@@ -50,25 +50,25 @@ public class BeanMeta<S> {
 	 * @param type
 	 * @return
 	 */
-	public static <S> BeanMeta<S> from(Class<S> type) {
+	public static BeanMeta from(Class type) {
 		Assert.notNull(type, "Type must not be null!");
 
-		Reference<BeanMeta<?>> cachedRef = CACHE.get(type);
-		BeanMeta<?> cached = cachedRef == null ? null : cachedRef.get();
+		Reference<BeanMeta> cachedRef = CACHE.get(type);
+		BeanMeta cached = cachedRef == null ? null : cachedRef.get();
 
 		if (cached != null) {
-			return (BeanMeta<S>) cached;
+			return (BeanMeta) cached;
 		}
 
-		BeanMeta<S> result = new BeanMeta<S>(type);
-		CACHE.put(type, new WeakReference<BeanMeta<?>>(result));
+		BeanMeta result = new BeanMeta(type);
+		CACHE.put(type, new WeakReference<BeanMeta>(result));
 		return result;
 	}
 
-	public final Class<S> type;
+	public final Class type;
 	public final Map<Property, TypeDescriptor> properties;
 
-	BeanMeta(Class<S> type) {
+	BeanMeta(Class type) {
 		this.type = type;
 		this.properties = Collections.unmodifiableMap(findProperties(type));
 	}
@@ -79,7 +79,7 @@ public class BeanMeta<S> {
 	 * @param type
 	 * @return
 	 */
-	public static Map<Property, TypeDescriptor> findProperties(Class<?> type) {
+	public static Map<Property, TypeDescriptor> findProperties(Class type) {
 		if (BsonSimpleTypes.isSimpleType(type) || type.isArray()
 				|| Iterable.class.isAssignableFrom(type) || Map.class.isAssignableFrom(type)) {
 			return Collections.emptyMap();
