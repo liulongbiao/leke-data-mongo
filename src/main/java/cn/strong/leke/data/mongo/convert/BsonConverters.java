@@ -140,6 +140,7 @@ public class BsonConverters {
 		}
 	}
 
+	@ReadingConverter
 	public static enum DBObjectToStringConverter implements Converter<DBObject, String> {
 
 		INSTANCE;
