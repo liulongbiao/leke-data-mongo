@@ -30,7 +30,6 @@ import org.springframework.util.Assert;
 
 import cn.strong.leke.data.mongo.convert.BsonConverters.BigDecimalToStringConverter;
 import cn.strong.leke.data.mongo.convert.BsonConverters.BigIntegerToStringConverter;
-import cn.strong.leke.data.mongo.convert.BsonConverters.DBObjectToStringConverter;
 import cn.strong.leke.data.mongo.convert.BsonConverters.StringToBigDecimalConverter;
 import cn.strong.leke.data.mongo.convert.BsonConverters.StringToBigIntegerConverter;
 import cn.strong.leke.data.mongo.convert.BsonConverters.StringToURLConverter;
@@ -90,7 +89,6 @@ public class CustomConversions {
 		toRegister.add(StringToBigIntegerConverter.INSTANCE);
 		toRegister.add(URLToStringConverter.INSTANCE);
 		toRegister.add(StringToURLConverter.INSTANCE);
-		toRegister.add(DBObjectToStringConverter.INSTANCE);
 
 		for (Object c : toRegister) {
 			registerConversion(c);
