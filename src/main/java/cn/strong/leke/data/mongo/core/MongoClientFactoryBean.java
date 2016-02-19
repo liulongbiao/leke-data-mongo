@@ -3,6 +3,8 @@
  */
 package cn.strong.leke.data.mongo.core;
 
+import static com.mongodb.MongoClientOptions.builder;
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +19,7 @@ import org.springframework.util.StringUtils;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientOptions.Builder;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
@@ -35,6 +38,7 @@ public class MongoClientFactoryBean implements FactoryBean<MongoClient>,
 
 	private String replicaset;
 	private String credentials;
+	private MongoClientOptions options;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -45,10 +49,10 @@ public class MongoClientFactoryBean implements FactoryBean<MongoClient>,
 		CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
 				MongoClient.getDefaultCodecRegistry(),
 				CodecRegistries.fromProviders(new BeanCodecProvider()));
-		MongoClientOptions options = new MongoClientOptions.Builder()
-				.codecRegistry(codecRegistry).build();
+		Builder builder = options == null ? builder() : builder(options);
+		MongoClientOptions ops = builder.codecRegistry(codecRegistry).build();
 
-		client = new MongoClient(seeds, credentialsList, options);
+		client = new MongoClient(seeds, credentialsList, ops);
 	}
 
 	private List<ServerAddress> buildSeeds() throws UnknownHostException {
@@ -111,6 +115,10 @@ public class MongoClientFactoryBean implements FactoryBean<MongoClient>,
 
 	public void setCredentials(String credentials) {
 		this.credentials = credentials;
+	}
+
+	public void setOptions(MongoClientOptions options) {
+		this.options = options;
 	}
 
 }
