@@ -82,8 +82,8 @@ public class MongoClientFactoryBean implements FactoryBean<MongoClient>,
 							"credential format must confirm to ${username}:${dbname}:${password} ,but actual received :"
 									+ cred);
 				}
-				result.add(MongoCredential.createMongoCRCredential(triple[0],
-						triple[1], triple[2].toCharArray()));
+				result.add(MongoCredential.createCredential(triple[0], triple[1],
+						triple[2].toCharArray()));
 			}
 		}
 		return result;
