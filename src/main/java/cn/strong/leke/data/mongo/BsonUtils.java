@@ -28,6 +28,16 @@ public class BsonUtils {
 	}
 
 	/**
+	 * 将任意类型转换成 Document 所支持的 Bson 类型的值
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static Object toBsonValue(Object obj) {
+		return CONVERTER.toBSON(obj);
+	}
+
+	/**
 	 * 将 Mongo 文档转换为 JavaBean
 	 * 
 	 * @param doc
