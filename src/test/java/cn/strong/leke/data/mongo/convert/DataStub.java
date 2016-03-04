@@ -3,9 +3,11 @@
  */
 package cn.strong.leke.data.mongo.convert;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import cn.strong.leke.data.mongo.annotations.BsonDecimal;
 import cn.strong.leke.data.mongo.annotations.ObjectId;
 import cn.strong.leke.data.mongo.annotations._id;
 
@@ -22,6 +24,8 @@ public class DataStub {
 	private String name;
 	private Integer age;
 	private byte[] imgdata;
+	@BsonDecimal(scale = 2)
+	private BigDecimal score;
 	private List<Assoc> assocs;
 
 	public String getId() {
@@ -54,6 +58,14 @@ public class DataStub {
 
 	public void setImgdata(byte[] imgdata) {
 		this.imgdata = imgdata;
+	}
+
+	public BigDecimal getScore() {
+		return score;
+	}
+
+	public void setScore(BigDecimal score) {
+		this.score = score;
 	}
 
 	public List<Assoc> getAssocs() {

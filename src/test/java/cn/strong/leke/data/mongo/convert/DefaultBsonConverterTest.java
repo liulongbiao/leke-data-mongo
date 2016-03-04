@@ -3,6 +3,7 @@ package cn.strong.leke.data.mongo.convert;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -26,6 +27,7 @@ public class DefaultBsonConverterTest {
 		stub.setName("stub");
 		stub.setAge(23);
 		stub.setImgdata("imgdata".getBytes());
+		stub.setScore(new BigDecimal(86.512));
 		Assoc a1 = new Assoc();
 		a1.setAssocId(new ObjectId().toString());
 		a1.setName("assoc1");
@@ -48,10 +50,13 @@ public class DefaultBsonConverterTest {
 	@Test
 	public void testFromBSON() {
 		Document doc = (Document) converter.toBSON(stub);
+		String json = doc.toJson(new JsonWriterSettings(true));
+		System.out.println(json);
 
 		DataStub result = converter.fromBSON(doc, DataStub.class);
 		assertNotNull("result should not be null", result);
 		assertTrue("imgdata should not loss", new String(result.getImgdata()).equals("imgdata"));
+		System.out.println(result.getScore());
 	}
 
 }
