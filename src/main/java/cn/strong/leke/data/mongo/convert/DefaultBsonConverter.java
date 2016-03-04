@@ -6,6 +6,7 @@ package cn.strong.leke.data.mongo.convert;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 
+import cn.strong.leke.data.mongo.annotations.BsonDecimal;
 import cn.strong.leke.data.mongo.annotations.ObjectId;
 import cn.strong.leke.data.mongo.annotations._id;
 
@@ -31,6 +33,7 @@ import cn.strong.leke.data.mongo.annotations._id;
 public class DefaultBsonConverter extends AbstractBsonConverter {
 
 	private static final String KEY_ID = "_id";
+	private static final TypeDescriptor TD_BIG_DECIMAL = TypeDescriptor.valueOf(BigDecimal.class);
 
 	public DefaultBsonConverter() {
 		this(new DefaultConversionService());
@@ -133,22 +136,43 @@ public class DefaultBsonConverter extends AbstractBsonConverter {
 					readMethod.setAccessible(true);
 				}
 				Object value = readMethod.invoke(obj);
-				if (td.hasAnnotation(ObjectId.class)) {
-					value = conversionService.convert(value, org.bson.types.ObjectId.class);
-				} else {
-					value = toBSON(value);
-				}
-
-				String name = p.getName();
-				if (td.hasAnnotation(_id.class)) {
-					name = KEY_ID;
-				}
+				value = convertToBsonValue(value, td);
+				String name = inspectPropertyName(p, td);
 				result.put(name, value);
 			} catch (Throwable ex) {
 				throw new BsonConvertException(
 						"无法转换 JavaBean " + obj.getClass().getSimpleName() + "中的" + p.getName() + "属性", ex);
 			}
 		};
+	}
+
+	private String inspectPropertyName(Property p, TypeDescriptor td) {
+		String name = p.getName();
+		if (td.hasAnnotation(_id.class)) {
+			name = KEY_ID;
+		}
+		return name;
+	}
+
+	private Object convertToBsonValue(Object value, TypeDescriptor td) {
+		if (value == null) {
+			return null;
+		}
+
+		if (td.hasAnnotation(ObjectId.class)) {
+			value = conversionService.convert(value, org.bson.types.ObjectId.class);
+		} else if (td.isAssignableTo(TD_BIG_DECIMAL)) {
+			BigDecimal b = (BigDecimal) value;
+			BsonDecimal bbd = td.getAnnotation(BsonDecimal.class);
+			if (bbd == null) {
+				value = b.toString();
+			} else {
+				value = b.doubleValue();
+			}
+		} else {
+			value = toBSON(value);
+		}
+		return value;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -167,6 +191,14 @@ public class DefaultBsonConverter extends AbstractBsonConverter {
 		}
 		if (targetType == null) {
 			targetType = sourceType;
+		}
+		
+		BsonDecimal bd = targetType.getAnnotation(BsonDecimal.class);
+		if(bd != null) {
+			if(!(dbo instanceof Double)) {
+				throw new IllegalStateException("@BsonDecimal field must convert from a double value");
+			}
+			return new BigDecimal((double) dbo).setScale(bd.scale(), bd.round());
 		}
 
 		Class<?> targetClazz = targetType.getType();
@@ -283,10 +315,7 @@ public class DefaultBsonConverter extends AbstractBsonConverter {
 				return;
 			}
 			try {
-				String name = p.getName();
-				if (td.hasAnnotation(_id.class)) {
-					name = KEY_ID;
-				}
+				String name = inspectPropertyName(p, td);
 				Object value = source.get(name);
 				Object targetValue = read(value, TypeDescriptor.forObject(value), td);
 
