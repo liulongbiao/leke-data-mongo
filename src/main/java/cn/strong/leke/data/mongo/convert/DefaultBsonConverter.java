@@ -314,6 +314,9 @@ public class DefaultBsonConverter extends AbstractBsonConverter {
 
 	private BiConsumer<Property, TypeDescriptor> readBeanProperty(Map<String, Object> source, Object target) {
 		return (p, td) -> {
+			if (td.hasAnnotation(BsonIgnore.class)) {
+				return;
+			}
 			Method writeMethod = p.getWriteMethod();
 			if (writeMethod == null) {
 				return;
