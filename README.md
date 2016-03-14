@@ -31,10 +31,12 @@ public MongoDatabase db(MongoClient mongo) throws Exception {
 
 ### JavaBean 编写
 
-JavaBean 的字段可添加注解 `@_id` 将字段标识为对应 MongoDB 主键 `_id` 字段。
+编写 JavaBean 时和 BSON 有关的注解：
 
-JavaBean 的字段可添加注解 `@ObjectId` 将字段标识为需转换为 `ObjectId` 类型。
-这在数据库中存放  `ObjectId` 类型，而 JavaBean 中希望显示 `String` 类型时很有用。
+* `@_id` - 标识字段为对应 MongoDB 主键 `_id` 的字段
+* `@ObjectId` - 标识字段对应 BSON 中的 `ObjectId` 类型，支持 `String`、`BigInteger` 等类型
+* `@BsonDecimal` - 标识 `BigDecimal` 字段应对应 BSON 中的 `Double` 类型(默认对应于 `String` 类型)
+* `@BsonIgnore` - 标识字段在转换为 BSON 文档时应忽略该字段，该注解可注释在方法上
 
 ```java
 public class JavaBean {
@@ -42,6 +44,14 @@ public class JavaBean {
   private org.bson.types.ObjectId id; // 对应 _id 字段
   @ObjectId
   private String refId; // 数据库中存放 ObjectId 类型
+  @BsonDecimal
+  private BigDecimal score; // 数据库中已 Double 类型存储
+  
+  @BsonIgnore
+  public String getTmp() { // 在转换为 BSON 文档时应忽略该字段
+    return id.toString();
+  }
+  
   // getters and setters
 }
 ```
