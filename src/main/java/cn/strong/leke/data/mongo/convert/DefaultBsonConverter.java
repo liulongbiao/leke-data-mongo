@@ -21,6 +21,7 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 
 import cn.strong.leke.data.mongo.annotations.BsonDecimal;
+import cn.strong.leke.data.mongo.annotations.BsonIgnore;
 import cn.strong.leke.data.mongo.annotations.ObjectId;
 import cn.strong.leke.data.mongo.annotations._id;
 
@@ -127,6 +128,9 @@ public class DefaultBsonConverter extends AbstractBsonConverter {
 
 	private BiConsumer<Property, TypeDescriptor> writeBeanProperty(Object obj, Document result) {
 		return (p, td) -> {
+			if (td.hasAnnotation(BsonIgnore.class)) {
+				return;
+			}
 			Method readMethod = p.getReadMethod();
 			if (readMethod == null) {
 				return;
