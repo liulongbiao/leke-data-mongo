@@ -11,6 +11,7 @@ import org.bson.Document;
 import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.strong.leke.data.mongo.convert.DataStub.Assoc;
@@ -48,6 +49,7 @@ public class DefaultBsonConverterTest {
 	}
 
 	@Test
+	@Ignore
 	public void testFromBSON() {
 		Document doc = (Document) converter.toBSON(stub);
 		String json = doc.toJson(new JsonWriterSettings(true));

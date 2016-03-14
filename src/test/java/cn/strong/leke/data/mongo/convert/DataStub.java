@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import cn.strong.leke.data.mongo.annotations.BsonDecimal;
+import cn.strong.leke.data.mongo.annotations.BsonIgnore;
 import cn.strong.leke.data.mongo.annotations.ObjectId;
 import cn.strong.leke.data.mongo.annotations._id;
 
@@ -74,6 +75,11 @@ public class DataStub {
 
 	public void setAssocs(List<Assoc> assocs) {
 		this.assocs = assocs;
+	}
+
+	@BsonIgnore
+	public String getTmp() {
+		return name;
 	}
 
 	public static class Assoc {
